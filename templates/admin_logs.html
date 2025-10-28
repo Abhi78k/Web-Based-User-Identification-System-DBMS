@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}System Logs - Secure Auth System{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">System Logs</h1>
+
+<ul class="nav nav-tabs mb-4" id="logTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="audit-tab" data-bs-toggle="tab" data-bs-target="#audit" type="button" role="tab">
+            Audit Logs
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="sessions-tab" data-bs-toggle="tab" data-bs-target="#sessions" type="button" role="tab">
+            Session History
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="logTabsContent">
+    <!-- Audit Logs Tab -->
+    <div class="tab-pane fade show active" id="audit" role="tabpanel">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Audit Logs</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Log ID</th>
+                                <th>User ID</th>
+                                <th>Username</th>
+                                <th>Action</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for log in audit_logs %}
+                            <tr>
+                                <td>{{ log.log_id }}</td>
+                                <td>{{ log.user_id or '-' }}</td>
+                                <td>{{ log.username or '-' }}</td>
+                                <td><code>{{ log.action }}</code></td>
+                                <td>{{ log.action_time.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sessions Tab -->
+    <div class="tab-pane fade" id="sessions" role="tabpanel">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Session History</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Session ID</th>
+                                <th>User ID</th>
+                                <th>Username</th>
+                                <th>Login Time</th>
+                                <th>Logout Time</th>
+                                <th>IP Address</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for session in sessions %}
+                            <tr>
+                                <td>{{ session.session_id }}</td>
+                                <td>{{ session.user_id }}</td>
+                                <td>{{ session.username or '-' }}</td>
+                                <td>{{ session.login_time.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                <td>{{ session.logout_time.strftime('%Y-%m-%d %H:%M:%S') if session.logout_time else '<span class="badge bg-success">Active</span>'|safe }}</td>
+                                <td>{{ session.ip_address }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

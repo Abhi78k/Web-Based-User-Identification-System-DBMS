@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - Secure Auth System{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Profile Settings</h1>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Edit Profile</h4>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    {% if user.profile_pic %}
+                        <img src="{{ url_for('auth.uploaded_file', filename=user.profile_pic) }}" 
+                             alt="Profile Picture" 
+                             id="previewImage"
+                             class="img-thumbnail rounded-circle" 
+                             style="max-width: 150px; max-height: 150px;">
+                    {% else %}
+                        <div class="bg-secondary rounded-circle d-inline-flex align-items-center justify-content-center" 
+                             id="previewImage"
+                             style="width: 150px; height: 150px;">
+                            <span class="text-white fs-1">{{ user.username[0].upper() }}</span>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <form method="POST" action="{{ url_for('auth.profile') }}" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="profile_pic" class="form-label">Profile Picture</label>
+                        <input type="file" class="form-control" id="profile_pic" name="profile_pic" accept="image/*" onchange="previewFile()">
+                        <div class="form-text">Upload PNG, JPG, or JPEG (max 16MB)</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" value="{{ user.username }}" disabled>
+                        <div class="form-text">Username cannot be changed</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" value="{{ user.email }}" disabled>
+                        <div class="form-text">Email cannot be changed</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="full_name" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="full_name" name="full_name" value="{{ user.full_name or '' }}">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Role</label>
+                        <input type="text" class="form-control" value="{{ user.role_name }}" disabled>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                        <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+                
+                <hr class="my-4">
+                
+                <div class="card border-danger">
+                    <div class="card-body">
+                        <h5 class="card-title text-danger">Danger Zone</h5>
+                        <p class="card-text">Once you delete your account, there is no going back. Please be certain.</p>
+                        <form method="POST" action="{{ url_for('auth.delete_account') }}" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone!');">
+                            <button type="submit" class="btn btn-danger">Delete Account</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function previewFile() {
+    const file = document.getElementById('profile_pic').files[0];
+    const preview = document.getElementById('previewImage');
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onloadend = function() {
+            preview.src = reader.result;
+            preview.style.maxWidth = '150px';
+            preview.style.maxHeight = '150px';
+            preview.classList.add('img-thumbnail', 'rounded-circle');
+            preview.classList.remove('bg-secondary', 'd-inline-flex', 'align-items-center', 'justify-content-center');
+            preview.innerHTML = '';
+        }
+        reader.readAsDataURL(file);
+    }
+}
+</script>
+{% endblock %}
+

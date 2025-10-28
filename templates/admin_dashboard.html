@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Secure Auth System{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Admin Dashboard</h1>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card shadow bg-primary text-white">
+            <div class="card-body">
+                <h5 class="card-title">Total Users</h5>
+                <h2 class="mb-0">{{ stats.total_users }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow bg-success text-white">
+            <div class="card-body">
+                <h5 class="card-title">Total Roles</h5>
+                <h2 class="mb-0">{{ stats.total_roles }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow bg-warning text-dark">
+            <div class="card-body">
+                <h5 class="card-title">Total Sessions</h5>
+                <h2 class="mb-0">{{ stats.total_sessions }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow bg-info text-white">
+            <div class="card-body">
+                <h5 class="card-title">Total Logs</h5>
+                <h2 class="mb-0">{{ stats.total_logs }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    <a href="{{ url_for('admin.admin_users') }}" class="list-group-item list-group-item-action">
+                        <i class="bi bi-people"></i> Manage Users
+                    </a>
+                    <a href="{{ url_for('admin.admin_logs') }}" class="list-group-item list-group-item-action">
+                        <i class="bi bi-journal-text"></i> View System Logs
+                    </a>
+                    <a href="{{ url_for('dashboard.dashboard') }}" class="list-group-item list-group-item-action">
+                        <i class="bi bi-house"></i> User Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">System Information</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Admin Role:</strong> You have full access to manage users, view logs, and system configuration.</p>
+                <p><strong>Security:</strong> All user actions are logged in the audit system.</p>
+                <p><strong>Database:</strong> MySQL backend with secure password hashing.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

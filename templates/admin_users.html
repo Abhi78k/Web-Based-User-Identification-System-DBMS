@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Users - Secure Auth System{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">User Management</h1>
+
+<div class="card shadow">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">All Users</h4>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Full Name</th>
+                        <th>Role</th>
+                        <th>Joined</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.user_id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.full_name or '-' }}</td>
+                        <td>
+                            <span class="badge bg-{{ 'danger' if user.role_name == 'Admin' else 'secondary' }}">
+                                {{ user.role_name }}
+                            </span>
+                        </td>
+                        <td>{{ user.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <!-- Change Role Modal Trigger -->
+                                <button type="button" class="btn btn-sm btn-warning" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#roleModal{{ user.user_id }}">
+                                    Change Role
+                                </button>
+                                
+                                <!-- Delete Button -->
+                                {% if user.user_id != current_user.user_id %}
+                                <form method="POST" action="{{ url_for('admin.delete_user', user_id=user.user_id) }}" 
+                                      onsubmit="return confirm('Are you sure you want to delete {{ user.username }}?');" 
+                                      class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                </form>
+                                {% else %}
+                                <button type="button" class="btn btn-sm btn-danger" disabled>Delete</button>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Change Role Modal -->
+                            <div class="modal fade" id="roleModal{{ user.user_id }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Change Role for {{ user.username }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <form method="POST" action="{{ url_for('admin.change_role', user_id=user.user_id) }}">
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label for="role" class="form-label">Select New Role</label>
+                                                    <select class="form-select" id="role" name="role_id" required>
+                                                        {% for role in roles %}
+                                                        <option value="{{ role.role_id }}" {% if role.role_id == user.role_id %}selected{% endif %}>
+                                                            {{ role.role_name }} - {{ role.description }}
+                                                        </option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-primary">Update Role</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
