@@ -183,17 +183,7 @@ python app.py
 
 The app will run on `http://localhost:5000` with debug mode enabled.
 
-## Production Deployment
-
-For production deployment:
-1. Set `FLASK_ENV=production` or modify `app.py` to disable debug mode
-2. Use a production WSGI server (Gunicorn, uWSGI)
-3. Set up reverse proxy (Nginx)
-4. Use environment variables for sensitive data
-5. Enable HTTPS with SSL certificates
-6. Configure proper database backups
-
-## Technologies Used
+## Tech Stack
 
 - **Backend**: Flask (Python)
 - **Database**: MySQL with PyMySQL
@@ -201,11 +191,4 @@ For production deployment:
 - **Frontend**: Bootstrap 5, HTML5, CSS3, JavaScript
 - **Security**: Werkzeug password hashing
 
-## License
-
-This project is open source and available for educational purposes.
-
-## Contact
-
-For issues or questions, please open an issue in the repository.
 
